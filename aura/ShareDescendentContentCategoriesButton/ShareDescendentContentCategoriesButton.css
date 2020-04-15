@@ -1,0 +1,13 @@
+.THIS.outer-container {
+	display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  max-height: 13.5rem;
+}
+
+.THIS .search-container {
+  display: flex;
+  flex-direction: column;
+  flex: 2;
+  margin-right: 1rem;
+}

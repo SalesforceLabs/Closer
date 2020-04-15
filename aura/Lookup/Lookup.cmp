@@ -1,0 +1,21 @@
+<aura:component access="global">
+	<aura:attribute name="timeoutId" type="String" />
+
+	<aura:attribute name="label" type="String" default="Search" />
+	<aura:attribute name="name" type="String" default="search" />
+	<aura:attribute name="placeholder" type="String" default="search" />
+	<aura:attribute name="query" type="String" />
+	<aura:attribute name="variant" type="String" default="label-hidden" />
+
+	<aura:registerEvent name="SearchQuery" type="c:SearchQuery" />
+	<lightning:input
+		class="search-input"
+		variant="{!v.variant}"
+		type="search"
+		label="{!v.label}"
+		name="{!v.name}"
+		placeholder="{!v.placeholder}"
+		value="{!v.query}"
+		onchange="{!c.handleKeyUp}"
+	/>
+</aura:component>

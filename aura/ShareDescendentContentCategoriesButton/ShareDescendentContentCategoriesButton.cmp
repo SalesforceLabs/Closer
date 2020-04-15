@@ -1,0 +1,21 @@
+<aura:component
+	controller="ContentCategorySharing"
+	implements="force:lightningQuickAction,force:hasRecordId"
+>
+	<aura:attribute name="userId" type="String" />
+
+	<div class="outer-container">
+		<div class="search-container">
+			<c:UserSearchContainer value="{!v.userId}" />
+		</div>
+
+		<div class="button-container">
+			<lightning:button variant="brand" label="Share" onclick="{! c.share }" />
+			<lightning:button
+				variant="brand"
+				label="Unshare"
+				onclick="{! c.unShare }"
+			/>
+		</div>
+	</div>
+</aura:component>

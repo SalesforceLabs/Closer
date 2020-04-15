@@ -1,0 +1,57 @@
+<aura:component>
+    <aura:attribute name="node" type="Object"/>
+    <aura:attribute name="depth" type="Integer"/>
+    <aura:attribute name="activeContentCategory" type="Object"/>
+    <aura:attribute name="expanded" type="boolean" default="false"/>
+
+    <aura:registerEvent name="ToggleTopLevelDragSpot" type="c:ToggleTopLevelDragSpot"/>
+    <aura:registerEvent name="SelectActiveContentCategory" type="c:SelectActiveContentCategory"/>
+    <aura:registerEvent name="ContentCategoryParentChange" type="c:ContentCategoryParentChange"/>
+    <aura:attribute name="isActive" type="boolean" default="false"/>
+    <aura:handler name="change" value="{!v.node}" action="{!c.update}"/>
+
+    <li draggable="true"
+        ondragstart="{!c.handleDragStart}"
+        ondragend="{!c.handleDragEnd}"
+        ondragover="{!c.handleDragOver}"
+        ondragenter="{!c.handleDragEnter}"
+        ondragleave="{!c.handleDragLeave}"
+        ondrop="{!c.handleDrop}"
+        data-content-category-id="{!v.node.ContentCategory.Id}"
+        data-content-category-parent-id="{!v.node.ContentCategory.Closer__Parent_Content_Category__c}"
+        role="treeitem"
+        aria-level="{!v.depth + 1}"
+        aria-expanded="{!v.expanded}"
+        aria-label="Tree Branch"
+        aura:id="node-li"
+        id="{!'node-li-' + v.node.ContentCategory.Id}">
+        <div class="{! v.isActive &amp;&amp; v.activeContentCategory != null ? 'slds-tree__item slds-tree__item_extension content-category_active' : 'slds-tree__item slds-tree__item_extension '}">
+            <button aura:id="node-button" id="{!'node-button-' + v.node.ContentCategory.Id}" onclick="{!c.expandBranch}" class="slds-button slds-button_icon slds-m-right_x-small icon-helper" aria-hidden="true" tabindex="-1"
+                title="Expand Tree Branch">
+                <aura:if isTrue="{!v.node.children.length > 0}">
+                    <lightning:icon iconName="utility:chevronright" size="xx-small"/>
+                </aura:if>
+                <span class="slds-assistive-text">Expand Tree Branch</span>
+            </button>
+            <span class="slds-has-flexi-truncate">
+                <span onclick="{!c.selectContentCategory}"
+                      data-content-category-id="{!v.node.ContentCategory.Id}"
+                      class="slds-tree__item-label slds-truncate"
+                      title="{!v.node.ContentCategory.Name}">
+                      {!v.node.ContentCategory.Name}
+                </span>
+            </span>
+        </div>
+        <aura:if isTrue="{!v.node.children.length > 0}">
+            <span role="group">
+                <aura:iteration items="{!v.node.children}" var="childNode">
+                    <c:PS_categoryTreeBranch node="{!childNode}"
+                                            depth="{!v.depth + 1}"
+                                             activeContentCategory="{!v.activeContentCategory}"
+                                             isActive="{! childNode.ContentCategory.Id == v.activeContentCategory.ContentCategory.Id}"
+                                             />
+                </aura:iteration>
+            </span>
+        </aura:if>
+    </li>
+</aura:component>

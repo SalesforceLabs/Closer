@@ -1,0 +1,170 @@
+.THIS .slds-box_extension {
+    position: relative;
+    background-color: #FFFFFF;
+}
+
+.THIS .no-padding {
+    padding: 0;
+}
+
+.THIS #topLevelDropSpot {
+    display: none;
+    /*border: 1px dashed #6ca1e9;*/
+    border: 1px dashed rgba(0, 0, 0, 0.16);
+    height: 30px;
+}
+
+.THIS #topLevelDropSpot.new-branch-helper_active {
+    display: block;
+}
+
+.THIS .icon-container_banner, .THIS .icon-container_tile {
+    padding: 5rem;
+}
+
+.THIS .icon-helper {
+    transition: .2s transform ease-in-out;
+    will-change: rotate;
+}
+
+.THIS .icon-helper_expanded {
+    transform: rotate(90deg);
+}
+
+.THIS .slds-tree__item_extension {
+    height: 100%;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.THIS .drag-active *, .THIS .drag-target * {
+    pointer-events: none;
+}
+
+.THIS .drag-active div {
+    position: relative;
+    z-index: 9999;
+    /*box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);*/
+}
+
+.THIS .held {
+    opacity: 0.5;
+}
+
+.THIS .dragging {
+    background: rgb(243, 242, 242);
+    opacity: 0.5;
+}
+
+.THIS .hovered {
+    background-color: #6ca1e9;
+}
+
+.THIS .drag-target div {
+    background-color: #0070D2;
+}
+
+.THIS .forceContentFileCard {
+    width: 100% !important;
+}
+
+.THIS .shade {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.THIS .shade-visible {
+    display: block;
+    background: rgba(0,0,0,0.25);
+}
+
+.THIS .shade:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.THIS .file-dropzone {
+    position: relative;
+    /*border: 1px dashed #0070D2;*/
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    min-height: 3rem;
+    width: 100%;
+}
+
+.THIS .file-dropzone:hover > .shade {
+    display: block;
+}
+
+.THIS .file-dropzone > img {
+    min-width: 100%;
+    height: auto;
+}
+
+.THIS .white-icon {
+    height: 100%;
+}
+
+.THIS .white-icon svg {
+    fill: #FFFFFF;
+}
+
+/*.THIS .shade-visible .white-icon svg {
+    fill: #706e6b;
+}*/
+
+.THIS .shade-visible:hover .white-icon svg {
+    fill: #FFFFFF;
+}
+
+.THIS .white-icon:hover svg {
+    fill: #0070D2 !important;
+    cursor: pointer;
+}
+
+.THIS .shade-hover {
+    display: block;
+    background: rgba(0,0,0,0.5);
+}
+
+.THIS .shade-hover svg {
+    fill: #0070D2;
+}
+
+.THIS .shade-hover .icon-container_tile div:first-child, .THIS .shade-hover .icon-container_banner div:first-child {
+    display: none !important;
+}
+ 
+.THIS .is_tile {
+    /*height: 8rem;
+    width: 8rem;*/
+    min-height: 12rem;
+    width: 12rem;
+    overflow: hidden;
+    background-repeat: no-repeat !important;
+    background-size: contain !important;
+    background-position: center !important;
+}
+
+.THIS .is_banner {
+    width: 100%;
+    min-height: 12rem;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+.THIS .content-category_active {
+    background-color: #0070D2;
+    color: #FFFFFF;
+}
+
+.THIS .content-category_active svg {
+    fill: #FFFFFF;
+}
+
+.THIS .file-drag-target * {
+    pointer-events: none;
+}

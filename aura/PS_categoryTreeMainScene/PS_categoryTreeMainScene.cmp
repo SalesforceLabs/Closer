@@ -1,0 +1,351 @@
+<aura:component controller="PS_categoryTreeBuilder_CT">
+	<aura:attribute name="activeContentCategory" type="Object" />
+	<aura:attribute name="isMainSceneLoading" type="Boolean" />
+	<aura:registerEvent
+		name="RefreshCategoryTreeBuilder"
+		type="c:RefreshCategoryTreeBuilder"
+	/>
+	<aura:registerEvent
+		name="UpsertContentCategoryFile"
+		type="c:UpsertContentCategoryFile"
+	/>
+	<aura:registerEvent name="PS_PopToast" type="c:PS_PopToast" />
+	<aura:handler name="init" value="{!this}" action="{!c.init}" />
+	<aura:handler
+		name="change"
+		value="{!v.activeContentCategory}"
+		action="{!c.init}"
+	/>
+
+	<div class="slds-grid slds-wrap">
+		<div class="slds-size_1-of-1">
+			<div class="slds-grid slds-wrap slds-border_bottom slds-p-around_small">
+				<div class="slds-size_1-of-3">
+					<aura:if isTrue="{!v.activeContentCategory != null}">
+						<div class="slds-form-element">
+							<label class="slds-form-element__label" for="form-element-id-01">
+								Content Category Name
+							</label>
+							<div class="slds-form-element__control">
+								<a
+									onclick="{!c.navigateToRecord}"
+									href="javascript:void(0)"
+									data-record-id="{!v.activeContentCategory.ContentCategory.Id}"
+								>
+									{!v.activeContentCategory.ContentCategory.Name}
+								</a>
+							</div>
+						</div>
+					</aura:if>
+				</div>
+				<div class="slds-size_1-of-3">
+					<aura:if isTrue="{!v.activeContentCategory != null}">
+						<div class="slds-form-element">
+							<label class="slds-form-element__label" for="form-element-id-01">
+								Parent Content Category Name
+							</label>
+							<div class="slds-form-element__control">
+								<a
+									onclick="{!c.navigateToRecord}"
+									href="javascript:void(0)"
+									data-record-id="{!v.activeContentCategory.ContentCategory.Closer__Parent_Content_Category__c}"
+								>
+									{!v.activeContentCategory.ContentCategory.Closer__Parent_Content_Category__r.Name}
+								</a>
+							</div>
+						</div>
+					</aura:if>
+				</div>
+				<div class="slds-size_1-of-3">
+					<button
+						onclick="{!c.toggleNewContentCategory}"
+						class="slds-button slds-button_neutral slds-float_right"
+					>
+						New Content Category
+					</button>
+				</div>
+			</div>
+		</div>
+		<aura:if isTrue="{!v.activeContentCategory != null}">
+			<div class="slds-size_1-of-1 slds-p-top_small">
+				<div class="slds-grid slds-wrap slds-p-around_small">
+					<div
+						class="slds-size_1-of-1 slds-mediums-size_1-of-2 slds-large-size_3-of-12"
+					>
+						<label class="slds-form-element__label" for="form-element-id-01">
+							Tile
+						</label>
+						<aura:if isTrue="{!v.activeContentCategory.tile != null}">
+							<div
+								class="slds-size_1-of-1 slds-p-around_small slds-align_absolute-center"
+							>
+								<div
+									ondrop="{!c.handleDrop}"
+									ondragover="{!c.handleDragOver}"
+									ondragenter="{!c.handleDragEnter}"
+									ondragleave="{!c.handleDragLeave}"
+									data-content-version-id="{!v.activeContentCategory.tile.Id}"
+									data-content-document-id="{!v.activeContentCategory.tile.ContentDocumentId}"
+									data-custom-image-type="tile"
+									data-content-category-id="{!v.activeContentCategory.ContentCategory.Id}"
+									class="file-dropzone is_tile"
+									style="{!'background-image: url(' + '/sfc/servlet.shepherd/version/renditionDownload?rendition=ORIGINAL_' + v.activeContentCategory.tile.FileType + '&amp;versionId=' + v.activeContentCategory.tile.Id + '&amp;contentId=' + v.activeContentCategory.tile.ContentDocumentId + ')'}"
+								>
+									<input
+										aura:id="tileInput"
+										id="tileInput"
+										class="slds-hidden slds-is-absolute file-input"
+										type="file"
+										multiple="multiple"
+										accept="image/*"
+										onchange="{!c.handleFileChange}"
+									/>
+									<div class="shade">
+										<div class="slds-align_absolute-center icon-container_tile">
+											<div
+												onclick="{!c.openFile}"
+												data-content-document-id="{!v.activeContentCategory.tile.ContentDocumentId}"
+											>
+												<lightning:icon
+													iconName="utility:preview"
+													size="medium"
+													class="white-icon slds-p-horizontal_small"
+												/>
+											</div>
+											<div
+												onclick="{!c.handleTileDropzoneClick}"
+												data-content-version-id="{!v.activeContentCategory.tile.Id}"
+												data-content-document-id="{!v.activeContentCategory.tile.ContentDocumentId}"
+											>
+												<lightning:icon
+													iconName="utility:upload"
+													size="medium"
+													class="white-icon slds-p-horizontal_small"
+												/>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<aura:set attribute="else">
+								<div
+									class="slds-size_1-of-1 slds-p-around_small slds-align_absolute-center"
+								>
+									<div
+										ondrop="{!c.handleDrop}"
+										ondragover="{!c.handleDragOver}"
+										ondragenter="{!c.handleDragEnter}"
+										ondragleave="{!c.handleDragLeave}"
+										data-content-version-id="new"
+										data-content-document-id="new"
+										data-custom-image-type="tile"
+										data-content-category-id="{!v.activeContentCategory.ContentCategory.Id}"
+										class="file-dropzone is_tile"
+										style="background: url();"
+									>
+										<input
+											aura:id="tileInput"
+											id="tileInput"
+											class="slds-hidden slds-is-absolute file-input"
+											type="file"
+											multiple="multiple"
+											accept="image/*"
+											onchange="{!c.handleFileChange}"
+										/>
+										<div class="shade shade-visible">
+											<div
+												class="slds-align_absolute-center icon-container_tile"
+											>
+												<div
+													onclick="{!c.handleTileDropzoneClick}"
+													data-content-version-id="new"
+													data-content-document-id="new"
+												>
+													<lightning:icon
+														iconName="utility:upload"
+														size="medium"
+														class="white-icon slds-p-horizontal_small"
+													/>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</aura:set>
+						</aura:if>
+					</div>
+					<div
+						class="slds-size_1-of-1 slds-mediums-size_1-of-2 slds-large-size_9-of-12"
+					>
+						<label class="slds-form-element__label" for="form-element-id-01">
+							Banner
+						</label>
+						<aura:if isTrue="{!v.activeContentCategory.banner != null}">
+							<div
+								class="slds-size_1-of-1 slds-p-around_small slds-align_absolute-center"
+							>
+								<div
+									ondrop="{!c.handleDrop}"
+									ondragover="{!c.handleDragOver}"
+									ondragenter="{!c.handleDragEnter}"
+									ondragleave="{!c.handleDragLeave}"
+									data-content-version-id="{!v.activeContentCategory.banner.Id}"
+									data-content-document-id="{!v.activeContentCategory.banner.ContentDocumentId}"
+									data-custom-image-type="banner"
+									data-content-category-id="{!v.activeContentCategory.ContentCategory.Id}"
+									class="file-dropzone is_banner"
+									style="{!'background-image: url(' + '/sfc/servlet.shepherd/version/renditionDownload?rendition=ORIGINAL_' + v.activeContentCategory.banner.FileType + '&amp;versionId=' + v.activeContentCategory.banner.Id + '&amp;contentId=' + v.activeContentCategory.banner.ContentDocumentId + ')'}"
+								>
+									<input
+										aura:id="bannerInput" 
+										id="bannerInput"
+										class="slds-hidden slds-is-absolute file-input"
+										type="file"
+										multiple="multiple"
+										accept="image/*"
+										onchange="{!c.handleFileChange}"
+									/>
+									<div class="shade">
+										<div
+											class="slds-align_absolute-center icon-container_banner"
+										>
+											<div
+												onclick="{!c.openFile}"
+												data-content-document-id="{!v.activeContentCategory.banner.ContentDocumentId}"
+											>
+												<lightning:icon
+													iconName="utility:preview"
+													size="medium"
+													class="white-icon slds-p-horizontal_small"
+												/>
+											</div>
+											<div
+												onclick="{!c.handleBannerDropzoneClick}"
+												data-content-version-id="{!v.activeContentCategory.banner.Id}"
+												data-content-document-id="{!v.activeContentCategory.banner.ContentDocumentId}"
+											>
+												<lightning:icon
+													iconName="utility:upload"
+													size="medium"
+													class="white-icon slds-p-horizontal_small"
+												/>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<aura:set attribute="else">
+								<div
+									class="slds-size_1-of-1 slds-p-around_small slds-align_absolute-center"
+								>
+									<div
+										ondrop="{!c.handleDrop}"
+										ondragover="{!c.handleDragOver}"
+										ondragenter="{!c.handleDragEnter}"
+										ondragleave="{!c.handleDragLeave}"
+										data-content-version-id="new"
+										data-content-document-id="new"
+										data-custom-image-type="banner"
+										data-content-category-id="{!v.activeContentCategory.ContentCategory.Id}"
+										class="file-dropzone is_banner"
+										style="background: url();"
+									>
+										<input
+											aura:id="bannerInput"
+											id="bannerInput"
+											class="slds-hidden slds-is-absolute file-input"
+											type="file"
+											multiple="multiple"
+											accept="image/*"
+											onchange="{!c.handleFileChange}"
+										/>
+										<div class="shade shade-visible">
+											<div
+												class="slds-align_absolute-center icon-container_banner"
+											>
+												<div
+													onclick="{!c.handleBannerDropzoneClick}"
+													data-content-version-id="new"
+													data-content-document-id="new"
+												>
+													<lightning:icon
+														iconName="utility:upload"
+														size="medium"
+														class="white-icon slds-p-horizontal_small"
+													/>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</aura:set>
+						</aura:if>
+					</div>
+					<div class="slds-size_1-of-1">
+						<label class="slds-form-element__label" for="form-element-id-01">
+							Related Content
+						</label>
+						<div class="slds-grid slds-wrap">
+							<aura:iteration
+								items="{!v.activeContentCategory.files}"
+								var="file"
+							>
+								<aura:if
+									isTrue="{!and(file.Closer__is_banner__c != true,file.Closer__is_tile__c != true)}"
+								>
+									<div
+										class="slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-p-around_small"
+									>
+										<lightning:fileCard
+											fileId="{!file.ContentDocument.Id}"
+											description="{!file.ContentDocument.Title}"
+										/>
+									</div>
+								</aura:if>
+							</aura:iteration>
+							<div
+								class="slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-p-around_small"
+							>
+								<div
+									ondrop="{!c.handleDrop}"
+									ondragover="{!c.handleDragOver}"
+									ondragenter="{!c.handleDragEnter}"
+									ondragleave="{!c.handleDragLeave}"
+									data-content-version-id="new"
+									data-content-document-id="new"
+									data-custom-image-type="related"
+									data-content-category-id="{!v.activeContentCategory.ContentCategory.Id}"
+									class="file-dropzone is_tile"
+									style="background: url();"
+								>
+									<input
+										id="contentInput"
+										class="slds-hidden slds-is-absolute file-input"
+										type="file"
+										multiple="multiple"
+										onchange="{!c.handleFileChange}"
+									/>
+									<div class="shade shade-visible">
+										<div class="slds-align_absolute-center icon-container_tile">
+											<div
+												onclick="{!c.handleAddContentClick}"
+												data-content-version-id="new"
+												data-content-document-id="new"
+											>
+												<lightning:icon
+													iconName="utility:upload"
+													size="medium"
+													class="white-icon slds-p-horizontal_small"
+												/>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</aura:if>
+	</div>
+</aura:component>

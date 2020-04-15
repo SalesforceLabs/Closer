@@ -1,0 +1,17 @@
+<aura:component controller="ContentCategorySharing">
+	<aura:attribute name="searchResults" type="list" />
+	<aura:handler
+		name="SearchQuery"
+		event="c:SearchQuery"
+		action="{!c.handleQuery}"
+	/>
+  <aura:attribute name="value" type="String" />
+  <aura:attribute name="selectedName" type="String"/>
+	<aura:handler
+		name="SearchResultSelected"
+		event="c:SearchResultSelected"
+		action="{!c.handleSearchResultSelected}"
+	/>
+
+	<c:Lookup query="{!v.selectedName}"/> <c:LookupResults searchResults="{!v.searchResults}" />
+</aura:component>

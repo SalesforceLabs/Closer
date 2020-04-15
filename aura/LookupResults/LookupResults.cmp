@@ -1,0 +1,34 @@
+<aura:component>
+  <aura:attribute name="searchResults" type="List" />
+  <aura:registerEvent name="SearchResultSelected" type="c:SearchResultSelected"/>
+
+  <aura:if isTrue="{!v.searchResults[0].length}">
+	<ul class="{!v.searchResults[0].length > 1 ? 'slds-has-dividers_bottom-space result-list slds-box' : ' result-list slds-box'}">
+		<aura:iteration items="{!v.searchResults[0]}" var="res">
+      <li class="slds-item"
+      data-userid="{!res.Id}"
+      data-username="{!res.Name}"
+      onclick="{!c.handleSearchResultSelected}" 
+      >
+				<lightning:tile label="{!res.Name}" href="{! '/' + res.Id }">
+					<aura:set attribute="media">
+						<lightning:avatar
+							src="{!res.FullPhotoUrl}"
+							fallbackIconName="standard:user"
+							alternativeText="{!res.Name}"
+						/>
+					</aura:set>
+					<ul class="slds-list_horizontal slds-has-dividers_right">
+						<aura:if isTrue="{!res.Title.length}">
+							<li class="slds-item">{!res.Title}</li>
+						</aura:if>
+            <aura:if isTrue="{!res.Manager.Name}">
+              <li class="slds-item">{!res.Manager.Name}</li>
+            </aura:if>
+					</ul>
+				</lightning:tile>
+			</li>
+		</aura:iteration>
+  </ul>
+  </aura:if>
+</aura:component>

@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="Event for setting the active content category">
+    <aura:attribute name="contentCategoryId" type="String"/>
+</aura:event>

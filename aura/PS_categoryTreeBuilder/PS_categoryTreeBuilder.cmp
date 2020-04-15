@@ -1,0 +1,150 @@
+<aura:component
+	access="global"
+	controller="PS_categoryTreeBuilder_CT"
+	implements="lightning:isUrlAddressable,flexipage:availableForAllPageTypes"
+>
+	<aura:attribute name="contentCategories" type="List" />
+	<aura:attribute name="activeContentCategory" type="Object" />
+	<aura:attribute name="depth" type="Integer" default="0" />
+	<aura:attribute name="isFocused" type="Boolean" />
+	<aura:attribute name="isAppLoading" type="Boolean" default="true" />
+	<aura:attribute name="isMainSceneLoading" type="Boolean" default="false" />
+
+	<aura:handler
+		event="lightning:tabFocused"
+		action="{! c.handleNavigateBackToComponent }"
+	/>
+	<aura:handler name="init" value="{!this}" action="{!c.init}" />
+
+	<aura:handler
+		name="SelectActiveContentCategory"
+		event="c:SelectActiveContentCategory"
+		action="{!c.handleActiveContentCategory}"
+	/>
+	<aura:handler
+		name="ContentCategoryParentChange"
+		event="c:ContentCategoryParentChange"
+		action="{!c.handleContentCategoryParentChange}"
+	/>
+	<aura:handler
+		name="RefreshCategoryTreeBuilder"
+		event="c:RefreshCategoryTreeBuilder"
+		action="{!c.handleRefresh}"
+	/>
+	<aura:handler
+		name="UpsertContentCategoryFile"
+		event="c:UpsertContentCategoryFile"
+		action="{!c.handleFileUpsert}"
+	/>
+	<aura:handler
+		name="PS_PopToast"
+		event="c:PS_PopToast"
+		action="{!c.handleToast}"
+	/>
+
+	<aura:handler
+		name="ToggleTopLevelDragSpot"
+		event="c:ToggleTopLevelDragSpot"
+		action="{!c.toggleTopLevelDragSpot}"
+	/>
+
+	<aura:registerEvent
+		name="ContentCategoryParentChange"
+		type="c:ContentCategoryParentChange"
+	/>
+	<aura:registerEvent name="PS_PopToast" type="c:PS_PopToast" />
+
+	<lightning:workspaceAPI aura:id="workspace" />
+
+	<div class="slds-grid slds-wrap">
+		<div
+			class="slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-p-around_x-small"
+		>
+			<div class="slds-box slds-box_extension">
+				<aura:if isTrue="{!v.isAppLoading}">
+					<lightning:spinner
+						alternativeText="App loading"
+						variant="brand"
+						size="small"
+					/>
+				</aura:if>
+				<div class="slds-tree_container">
+					<h4 class="slds-text-title_caps" id="treeheading"
+						>Content Categories</h4
+					>
+					<ul class="slds-tree" role="tree" aria-labelledby="treeheading">
+						<aura:iteration
+							items="{!v.contentCategories}"
+							var="contentCategory"
+						>
+							<c:PS_categoryTreeBranch
+								node="{!contentCategory}"
+								depth="{!v.depth}"
+                activeContentCategory="{!v.activeContentCategory}"
+                isActive="{! v.activeContentCategory.ContentCategory.Id ==  contentCategory.ContentCategory.Id}"
+              />
+						</aura:iteration>
+						<li
+							ondrop="{!c.handleDrop}"
+							ondragend="{!c.handleDragEnd}"
+							ondragover="{!c.handleDragOver}"
+							ondragenter="{!c.handleDragEnter}"
+							ondragleave="{!c.handleDragLeave}"
+							data-content-category-id="top"
+							data-content-category-parent-id="top"
+							role="treeitem"
+							aria-level="1"
+							aria-expanded="false"
+							aria-label="Tree Branch"
+							id="topLevelDropSpot"
+							aura:id="topLevelDropSpot"
+							class="slds-margin-top_small"
+						>
+							<div class="slds-tree__item slds-tree__item_extension">
+								<button
+									class="slds-button slds-button_icon slds-m-right_x-small icon-helper"
+									aria-hidden="true"
+									tabindex="-1"
+									title="Expand Tree Branch"
+								>
+									<span class="slds-assistive-text">Expand Tree Branch</span>
+								</button>
+								<span class="slds-has-flexi-truncate">
+									<span
+										class="slds-tree__item-label slds-truncate"
+										title="Top Level Placeholder"
+									>
+									</span>
+								</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div
+			class="slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_2-of-3 slds-p-around_x-small"
+		>
+			<div class="slds-box slds-box_extension no-padding">
+				<aura:if isTrue="{!v.isAppLoading}">
+					<lightning:spinner
+						alternativeText="App loading"
+						variant="brand"
+						size="small"
+					/>
+				</aura:if>
+				<aura:if isTrue="{!v.isMainSceneLoading}">
+					<lightning:spinner
+						alternativeText="App loading"
+						variant="brand"
+						size="small"
+					/>
+				</aura:if>
+				<c:PS_categoryTreeMainScene
+					activeContentCategory="{!v.activeContentCategory}"
+					isMainSceneLoading="{!v.isMainSceneLoading}"
+				/>
+			</div>
+		</div>
+	</div>
+</aura:component>

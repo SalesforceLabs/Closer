@@ -1,0 +1,12 @@
+.THIS.result-list {
+  background-color: white;
+  margin-top: .25rem;
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  border-radius: .5rem;
+  /* overflow: auto; */
+}
+
+.THIS.result-list li {
+  cursor: pointer;
+}

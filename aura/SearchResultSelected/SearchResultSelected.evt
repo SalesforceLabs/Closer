@@ -1,0 +1,4 @@
+<aura:event type="Component">
+	<aura:attribute name="userId" type="String" />
+	<aura:attribute name="userName" type="String" />
+</aura:event>
