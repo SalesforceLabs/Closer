@@ -1,4 +1,4 @@
-global class PostInstallScript implements InstallHandler {
+global with sharing class PostInstallScript implements InstallHandler {
   global void onInstall(InstallContext context) {        
       User u = [Select Id, Email, Name from User where Id =:context.installerID()];
       Organization o = [Select Id, Name, organizationtype, issandbox from Organization where Id =:context.organizationId()];
